@@ -1,112 +1,46 @@
 ## Team Members
 
-| S. No. | Name | Roll Number | Email |
-|---|---|---|---|
-| 1 | Majji Jayesh | cb.sc.u4aie24128 | cb.sc.u4aie24128@cb.students.amrita.edu |
-| 2 | Kotyada Siva Adityan | cb.sc.u4aie24126 | cb.sc.u4aie24126@cb.students.amrita.edu |
-| 3 | Mandavalli Vishnu Teja | cb.sc.u4aie24130 | cb.sc.u4aie24130@cb.students.amrita.edu |
-| 4 | Muvva Venkata Mukesh| cb.sc.u4aie24138 | cb.sc.u4aie24138@cb.students.amrita.edu |
-| 5 | Narni Srinivas | cb.sc.u4aie24140 | cb.sc.u4aie24140@cb.students.amrita.edu |
+| S. No. | Name                   | Roll Number      | Email                                                                                     |
+| ------ | ---------------------- | ---------------- | ----------------------------------------------------------------------------------------- |
+| 1      | Majji Jayesh           | cb.sc.u4aie24128 | [cb.sc.u4aie24128@cb.students.amrita.edu](mailto:cb.sc.u4aie24128@cb.students.amrita.edu) |
+| 2      | Kotyada Siva Adityan   | cb.sc.u4aie24126 | [cb.sc.u4aie24126@cb.students.amrita.edu](mailto:cb.sc.u4aie24126@cb.students.amrita.edu) |
+| 3      | Mandavalli Vishnu Teja | cb.sc.u4aie24130 | [cb.sc.u4aie24130@cb.students.amrita.edu](mailto:cb.sc.u4aie24130@cb.students.amrita.edu) |
+| 4      | Muvva Venkata Mukesh   | cb.sc.u4aie24138 | [cb.sc.u4aie24138@cb.students.amrita.edu](mailto:cb.sc.u4aie24138@cb.students.amrita.edu) |
+| 5      | Narni Srinivas         | cb.sc.u4aie24140 | [cb.sc.u4aie24140@cb.students.amrita.edu](mailto:cb.sc.u4aie24140@cb.students.amrita.edu) |
 
 # Drones---Trajectory-Tracking-for-a-Multicopter-under-a-Quaternion-Representation
 
-## Overview
-
-This project implements a quaternion-based trajectory tracking controller for a quadcopter UAV. The objective is to enable a drone to accurately follow predefined three-dimensional trajectories while maintaining stable orientation using quaternion mathematics.
-
-Unlike conventional Euler angle based controllers, this project employs quaternion representation to eliminate singularities such as gimbal lock and provide smooth attitude control during aggressive maneuvers.
-
-The project follows the hierarchical control framework presented in the paper:
-
-> Huu Thien Nguyen et al.,
-> "Trajectory Tracking for a Multicopter under a Quaternion Representation,"
-> IFAC Papers OnLine, 2020.
-
+## Abstract
+This project presents the design, implementation, and simulation of a nonlinear trajectory tracking control system for a quadrotor UAV using differential flatness and quaternion-based attitude control. Quadrotors are nonlinear and underactuated aerial systems in which translational and rotational dynamics are strongly coupled. Therefore, accurate trajectory tracking requires coordinated control of both the position and attitude of the vehicle.
+The proposed control architecture consists of an outer-loop position controller and an inner-loop quaternion-based attitude controller. A smooth three-dimensional reference trajectory is generated using quintic polynomial interpolation. The position controller compares the desired and actual position and velocity and generates the required translational acceleration. Differential-flatness-based mapping is then used to transform the desired translational acceleration into the required thrust and desired vehicle attitude. The desired attitude is represented using unit quaternions, avoiding the singularity issues associated with conventional Euler-angle representations.
+The quaternion attitude controller calculates the attitude tracking error between the desired and actual quaternion and generates the required control torque. The resulting thrust and torque commands are applied to the nonlinear quadrotor plant, which consists of translational dynamics, rotational rigid-body dynamics, and quaternion kinematics. The resulting states are fed back to the controllers, forming a complete closed-loop trajectory tracking system.
+The complete controller and quadrotor dynamics are implemented in MATLAB/Simulink. The simulation is evaluated using position tracking error, quaternion tracking error, thrust, control torque, and angular velocity. A 10-second three-dimensional trajectory is used to evaluate the controller. The obtained position RMSE values are 0.006659 m, 0.004419 m, and 0.000041 m for the X, Y, and Z axes respectively. The quaternion tracking errors for the selected trajectory are also found to be small. In addition, a MATLAB-based 3-D animation is developed to visualize the reference trajectory, actual quadrotor trajectory, and vehicle attitude.
+The project provides a complete simulation framework for studying nonlinear quadrotor trajectory tracking and establishes a foundation for further validation using physics-based simulation environments such as MuJoCo and for future real-world implementation.
 ---
-
-## Project Objectives
-
-- Model quadcopter dynamics using quaternion representation
-- Implement quaternion kinematics and rigid body dynamics
-- Implement differential flatness based trajectory generation
-- Design a feedback linearization position controller
-- Design a computed torque attitude controller
-- Validate the controller through simulation
-- Deploy the controller on a real quadcopter platform
-
----
-
-## Motivation
-
-Traditional quadcopter controllers commonly represent orientation using Euler angles (Roll-Pitch-Yaw). Although intuitive, Euler angles suffer from singularities (gimbal lock) and become unreliable during large rotations.
-
-Quaternion representation provides
-
-- Singularity-free orientation
-- Smooth rotational interpolation
-- Better numerical stability
-- Efficient attitude computation
-
-This project demonstrates how quaternion mathematics can be applied to practical quadcopter trajectory tracking.
-
----
-
-
-
-### High-Level Controller
-
-The position controller
-
-- receives the desired trajectory
-- computes position error
-- generates desired acceleration
-- computes desired thrust
-- computes the reference quaternion
-
-Controller type
-
-- Feedback Linearization
-- PID Correction
-- Differential Flatness
-
----
-
-### Low-Level Controller
-
-The attitude controller
-
-- tracks the reference quaternion
-- computes control torques
-- stabilizes drone orientation
-
-Controller type
-
-- Computed Torque Control (CTC)
-
----
-
-## Mathematical Model
-
-The project implements
-
-### Rotation Kinematics
-
-- Unit Quaternion
-- Quaternion Derivative
-- Rotation Matrix
-
-### Dynamics
-
-- Translational Dynamics
-- Rotational Dynamics
-- Newton-Euler Equations
-
-### Differential Flatness
-
-Flat Output
-
-
-## Control Architecture
-
-The controller is implemented using a hierarchical two-layer architecture.
-
+# 1. Introduction
+Unmanned aerial vehicles (UAVs) have become increasingly important in applications such as aerial surveillance, inspection, mapping, search and rescue, delivery, photography, and autonomous navigation. Among different classes of UAVs, quadrotors have received significant attention because of their compact structure, vertical take-off and landing capability, high maneuverability, and ability to hover at a fixed position.
+A quadrotor consists of four independently driven rotors that generate the thrust and control moments required for flight. By appropriately varying the rotor thrusts, the vehicle can control its translational motion and its orientation. However, despite their simple mechanical structure, quadrotors present a challenging control problem because their dynamics are nonlinear, coupled, and underactuated.
+The translational motion of a quadrotor is strongly dependent on its attitude. The total rotor thrust is generated along the vehicle's body thrust axis, and therefore the direction of the resulting force in the inertial frame depends on the orientation of the vehicle. For example, horizontal motion is achieved by changing the attitude of the vehicle so that the thrust vector develops a horizontal component. Consequently, accurate position tracking requires simultaneous regulation of the vehicle attitude.
+A conventional control strategy based only on position error is therefore insufficient for complete trajectory tracking. A hierarchical control architecture can be used to separate the problem into an outer position-control loop and an inner attitude-control loop. The outer loop determines the required translational acceleration based on the desired trajectory and the current vehicle state. The inner loop then determines the rotational control effort required to achieve the desired attitude.
+In this project, differential flatness is used to establish the relationship between the desired translational motion and the required quadrotor attitude and thrust. The differential-flatness formulation provides a convenient way to determine the vehicle orientation and thrust required to generate the desired translational acceleration. This allows the position-control and attitude-control problems to be connected through a systematic mathematical mapping.
+For attitude representation, unit quaternions are used instead of Euler angles. Euler-angle representations can suffer from singularities and discontinuities for certain orientations, whereas quaternions provide a compact representation of three-dimensional orientation without the same singularity problem. Quaternion-based control is therefore particularly suitable for nonlinear aerial-vehicle attitude tracking.
+The attitude controller receives the desired quaternion generated by the trajectory/flatness mapping and the actual quaternion obtained from the quadrotor dynamics. The quaternion tracking error is used to determine the required control torque. A computed-torque-based nonlinear attitude control structure is used to compensate for the rotational dynamics and improve attitude tracking.
+The complete system is implemented in MATLAB/Simulink. The model includes reference trajectory generation, position control, differential-flatness mapping, quaternion attitude control, translational dynamics, rotational dynamics, quaternion kinematics, state feedback, and data logging. A smooth quintic trajectory is generated to move the quadrotor between specified three-dimensional positions while maintaining smooth position, velocity, and acceleration profiles.
+The performance of the proposed implementation is evaluated through closed-loop simulation. Position tracking accuracy is evaluated using root mean square error (RMSE), while quaternion tracking, thrust, torque, and angular velocity are also analyzed. A 3-D animation is additionally developed to visualize the actual quadrotor position and attitude together with the desired reference trajectory.
+The overall objective of this project is therefore to develop a complete nonlinear quadrotor trajectory-tracking framework and to demonstrate, through MATLAB/Simulink simulation, how differential flatness and quaternion-based attitude control can be combined to achieve accurate three-dimensional trajectory tracking.
+# 2. Methodology
+## 2.1 Overall Methodology
+The proposed system uses a hierarchical nonlinear control architecture for three-dimensional quadrotor trajectory tracking. The methodology consists of the following stages:
+### Reference Trajectory Generation
+A smooth 3-D trajectory is generated using quintic polynomial interpolation, providing desired position ξr, velocity ξ̇r, and acceleration ξ̈r.
+### Position Control
+The desired and actual position/velocity are compared to calculate the tracking errors. A PID-based position controller generates the required translational acceleration ξ̈∗.
+### Differential Flatness Mapping
+The desired acceleration is converted into the required thrust T and desired attitude qr.
+### Quaternion-Based Attitude Control
+The desired quaternion is compared with the actual quaternion to obtain the attitude error. The attitude controller generates the required control torque τ.
+### Quadrotor Dynamics
+The thrust and torque are applied to the nonlinear quadrotor model consisting of translational dynamics, rotational dynamics, and quaternion kinematics.
+### Feedback and Evaluation
+The resulting position, quaternion, and angular velocity are fed back to the controllers. Tracking performance is evaluated using position RMSE, quaternion RMSE, thrust, torque, and angular velocity.
+The complete system is implemented and simulated using MATLAB/Simulink, with 3-D animation used to visualize the actual and reference trajectories.
